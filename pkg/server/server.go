@@ -14,6 +14,7 @@ import (
 func InitServer(addr string) *http.Server {
 	router := mux.NewRouter()
 	router.HandleFunc("/pokemon/{name}", endpoints.PokemonHandler)
+	router.HandleFunc("/health", endpoints.HealthHandler)
 
 	router.Use(middleware.LoggingMiddleware)
 

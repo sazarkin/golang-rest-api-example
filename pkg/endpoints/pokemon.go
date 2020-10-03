@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+
+	"github.com/sazarkin/golang-rest-api-example/pkg/services"
 )
 
 type pockemonResponse struct {
@@ -15,9 +17,23 @@ type pockemonResponse struct {
 // PokemonHandler Returns pokemon description by name
 func PokemonHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	name := vars["name"]
+
+	desc, err := services.GetPokemonDesc(name)
+	if err != nil {
+		returnJSONError(w, err)
+		return
+	}
+
+	descTranslated, err := services.TranslateToShakespeare(desc)
+	if err != nil {
+		returnJSONError(w, err)
+		return
+	}
+
 	resp := pockemonResponse{
-		Name:        vars["name"],
-		Description: "empty",
+		Name:        name,
+		Description: descTranslated,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

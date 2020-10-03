@@ -1,9 +1,9 @@
-FROM golang:1.12-alpine AS build_base
+FROM golang:1.15-alpine AS build_base
 
 RUN apk add --no-cache git
 WORKDIR /app/golang-rest-api-example
 COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod download -x
 COPY . .
 RUN CGO_ENABLED=0 go test -v ./...
 RUN go build -o app.exe ./cmd/app
